@@ -6,7 +6,7 @@
 class RandomWalk
 {
 public:
-	enum class WalkDirections
+	enum class Direction
 	{
 		UP,
 		RIGHT,
