@@ -3,9 +3,12 @@
 #include <iostream>
 #include "settings.h"
 #include "RandomWalk.h"
+#include "DatasetLoader.h"
 
 int main()
 {
+	DatasetLoader datasetLoader{"dataset"};
+	datasetLoader.listDirectories("dataset");
 	//Create a matrix
 	cv::Mat image(settings::imageHeight, settings::imageWidth, CV_8UC3); //BGR image with 3 channels of uchar
 	RandomWalk randomWalk(settings::imageHeight, settings::imageWidth);

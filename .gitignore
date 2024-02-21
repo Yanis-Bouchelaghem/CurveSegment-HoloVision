@@ -5,6 +5,9 @@
 *.userosscache
 *.sln.docstates
 
+# The images dataset
+dataset
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
