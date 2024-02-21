@@ -15,12 +15,15 @@ public:
 	};
 public:
 	RandomWalk(int height, int width);
-	std::vector<Vec2<int>> generateCurveSegment(int length);
+	std::vector<Vec2<int>> GenerateCurveSegment(int length);
+private:
+	//Returns the given position after performing a step in the given direction.
+	Vec2<int> Step(const Vec2<int>& currentPosition, Direction direction) const;
 private:
 	const int height;
 	const int width;
-	std::mt19937 rng;
-	std::uniform_int_distribution<int> heightDistribution;
-	std::uniform_int_distribution<int> widthDistribution;
-	std::uniform_int_distribution<int> directionDistribution{0,3};
+	mutable std::mt19937 rng;
+	mutable std::uniform_int_distribution<int> heightDistribution;
+	mutable std::uniform_int_distribution<int> widthDistribution;
+	mutable std::uniform_int_distribution<int> directionDistribution{0,3};
 };
