@@ -3,8 +3,8 @@
 
 namespace settings
 {
-	constexpr int imageWidth = 254;
-	constexpr int imageHeight = 254;
+	constexpr int imageWidth = 2160;
+	constexpr int imageHeight = 3840;
 	constexpr char datasetPath[] = "dataset";
 
 }
