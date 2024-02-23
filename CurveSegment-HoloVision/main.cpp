@@ -7,7 +7,7 @@
 
 int main()
 {
-	DatasetLoader datasetLoader{"dataset"};
+	DatasetLoader datasetLoader{"dataset\\images\\origins\\passport"};
 	//Create a matrix
 	cv::Mat image(settings::imageHeight, settings::imageWidth, CV_8UC3); //BGR image with 3 channels of uchar
 	RandomWalk randomWalk(settings::imageHeight, settings::imageWidth);

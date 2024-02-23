@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "settings.h"
 #include "utils.h"
+#include <iostream>
 
 DatasetLoader::DatasetLoader(Path datasetPath)
     :
@@ -11,8 +12,8 @@ DatasetLoader::DatasetLoader(Path datasetPath)
 {
     std::vector<std::vector<Path>> videosPaths;
     int leastFrames = std::numeric_limits<int>::max();
-    std::vector<Path> videoPaths = listDirectories(datasetPath);
-    for (auto& directoryPath : videoPaths)
+    std::vector<Path> directoryPaths = listDirectories(datasetPath);
+    for (auto& directoryPath : directoryPaths)
     {
         std::vector<std::string> images = listFramesInOrder(directoryPath);
 
@@ -29,22 +30,14 @@ DatasetLoader::DatasetLoader(Path datasetPath)
 
     for (auto& video : videosPaths)
     {
-        //Load the frames into a cube cv::Mat
-        int sizes[] = {settings::imageHeight,settings::imageWidth, leastFrames};
-        cv::Mat videoCube(3, sizes, CV_8UC3, cv::Scalar(0));
-        //Read frame by frame and fill the 3D matrix
-        for (int frameIndex = 0; frameIndex < leastFrames; ++frameIndex)
+        std::vector<cv::Mat> frames;
+        frames.reserve(video.size());
+        for (const std::string& framePath : video)
         {
-            cv::Mat frame = utils::LoadImage(video[frameIndex], cv::IMREAD_COLOR);
-            for (int x = 0; x < frame.cols; ++x)
-            {
-                for (int y = 0; y < frame.rows; ++y)
-                {
-                    videoCube.at<cv::Vec3b>(y,x,frameIndex) = frame.at<cv::Vec3b>(y,x);
-                }
-            }
+            cv::Mat frame = utils::LoadImage(framePath, cv::IMREAD_COLOR);
+            frames.push_back(frame);
         }
-        videos.push_back(videoCube);
+        videos.push_back(frames);
     }
 
 

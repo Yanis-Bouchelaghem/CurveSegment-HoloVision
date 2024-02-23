@@ -15,6 +15,6 @@ private:
 	std::vector<Path> listDirectories(Path path);
 	std::vector<Path> listFramesInOrder(Path path);
 private:
-	std::vector<cv::Mat> videos;
+	std::vector<std::vector<cv::Mat>> videos;
 	const std::string datasetPath;
 };
