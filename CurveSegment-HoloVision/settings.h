@@ -3,8 +3,9 @@
 
 namespace settings
 {
-	constexpr int imageWidth = 2160;
-	constexpr int imageHeight = 3840;
-	constexpr char datasetPath[] = "dataset";
+	constexpr int imageWidth = 224;
+	constexpr int imageHeight = 224;
+	constexpr char datasetPath[] = "dataset\\images\\origins\\passport";
+	constexpr int curveSegmentLength = 224;
 
 }

@@ -7,16 +7,23 @@
 
 int main()
 {
-	DatasetLoader datasetLoader{"dataset\\images\\origins\\passport"};
-	//Create a matrix
-	cv::Mat image(settings::imageHeight, settings::imageWidth, CV_8UC3); //BGR image with 3 channels of uchar
+	DatasetLoader datasetLoader{settings::datasetPath};
+	const std::vector<cv::Mat>& video = datasetLoader.GetVideo(0);
 	RandomWalk randomWalk(settings::imageHeight, settings::imageWidth);
-	auto curveSegment = randomWalk.GenerateCurveSegment(254);
-	for (const auto& position : curveSegment)
+	auto curveSegment = randomWalk.GenerateCurveSegment(settings::curveSegmentLength);
+	cv::Mat curveSegmentResult(curveSegment.size(), datasetLoader.GetFrameCountPerVideo(), CV_8UC3);
+
+	for (int i = 0; i < curveSegment.size(); ++i)
 	{
-		image.at<cv::Vec3b>(position.y, position.x) = cv::Vec3b{0,0,0};
+		Vec2 position = curveSegment[i];
+		for (int frameIndex = 0; frameIndex < video.size(); ++frameIndex)
+		{
+			curveSegmentResult.at<cv::Vec3b>(i, frameIndex) = video[frameIndex].at<cv::Vec3b>(position.y, position.x);
+		}
+
 	}
-	cv::imshow("image", image);
+	cv::imshow("image", curveSegmentResult);
+	cv::imwrite("output.jpg", curveSegmentResult);
 	cv::waitKey();
 	return 0;
 }

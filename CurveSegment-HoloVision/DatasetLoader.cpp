@@ -2,30 +2,30 @@
 #include <filesystem>
 #include <limits>
 #include <algorithm>
+#include <assert.h>
 #include "settings.h"
 #include "utils.h"
-#include <iostream>
 
 DatasetLoader::DatasetLoader(Path datasetPath)
     :
     datasetPath(datasetPath)
 {
     std::vector<std::vector<Path>> videosPaths;
-    int leastFrames = std::numeric_limits<int>::max();
-    std::vector<Path> directoryPaths = listDirectories(datasetPath);
+    frameCountPerVideo = std::numeric_limits<int>::max();
+    std::vector<Path> directoryPaths = ListDirectories(datasetPath);
     for (auto& directoryPath : directoryPaths)
     {
-        std::vector<std::string> images = listFramesInOrder(directoryPath);
+        std::vector<std::string> images = ListFramesInOrder(directoryPath);
 
-        if (images.size() < leastFrames)
-            leastFrames = images.size();
+        if (images.size() < frameCountPerVideo)
+            frameCountPerVideo = images.size();
         videosPaths.emplace_back(images);
     }
     
     //Truncate the number of frames for each video to the global minimum
     for (auto& videoFramesPath : videosPaths)
     {
-        videoFramesPath.resize(leastFrames);
+        videoFramesPath.resize(frameCountPerVideo);
     }
 
     for (auto& video : videosPaths)
@@ -40,11 +40,26 @@ DatasetLoader::DatasetLoader(Path datasetPath)
         videos.push_back(frames);
     }
 
-
-
 }
 
-std::vector<std::string> DatasetLoader::listDirectories(Path path)
+int DatasetLoader::GetVideoCount() const
+{
+    return videos.size();
+}
+
+const std::vector<cv::Mat>& DatasetLoader::GetVideo(int index) const
+{
+    assert(index < GetVideoCount());//If assertion triggers: Index out of bounds
+    assert(index >= 0);
+    return videos[index];
+}
+
+int DatasetLoader::GetFrameCountPerVideo() const
+{
+    return frameCountPerVideo;
+}
+
+std::vector<std::string> DatasetLoader::ListDirectories(Path path) const
 {
     std::vector<Path> directories;
 
@@ -55,7 +70,7 @@ std::vector<std::string> DatasetLoader::listDirectories(Path path)
     return directories;
 }
 
-std::vector<std::string> DatasetLoader::listFramesInOrder(Path path)
+std::vector<std::string> DatasetLoader::ListFramesInOrder(Path path) const
 {
     std::vector<std::string> images;
     for (auto& element : std::filesystem::directory_iterator(path))
